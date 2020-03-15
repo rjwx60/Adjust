@@ -1,45 +1,57 @@
-// for (const key in document) {
-//   console.log('key', key);
-//   console.log('value', document[key]);
-// }
+let locationRule = null;
 
+// 与 background 通信
 chrome.runtime.sendMessage({
   location: document.location
-}, (response) => {
-  if (response) {
+}, (rule) => {
+  if (rule) {
     window.onload = function() {
-      switch(response) {
-        case 'wx':
-          const QRcode = document.querySelector('.qr_code_pc');
-          // console.log('QRcode: ', QRcode);
-          const Container = document.querySelector('.rich_media_area_primary_inner');
-          // console.log('Container: ', Container);
-          QRcode.style = 'display:none;';
-          Container.style  = 'max-width: 1377px;'
-          break;
-        case 'juejin':
-          const MainContainer = document.querySelector('main.container');
-          MainContainer.style.maxWidth = '1260px';
-          const MainArea = document.querySelector('.main-area');
-          MainArea.style.width = '1200px';
-          const InfoBar = document.querySelector('.article-suspended-panel'); 
-          InfoBar.style.right = '30px';
-          const SideBar = document.querySelector('.sidebar');
-          SideBar.style.left = '10px';
-          SideBar.style.position = 'fixed';
-          const SideBarList = document.querySelectorAll('.sidebar-block');
-          SideBarList.forEach((cv, index, nodeList) => {
-            if(!(/catalog-block.pure/.test(cv.className))) {
-              cv.style.display = 'none';
+      locationRule = rule;
+      setTimeout(() => {
+        // styles
+        if (rule.styleRules.length) {
+          const styleRules = rule.styleRules;
+          styleRules.forEach(cv => {
+            // 是否单一节点
+            if (cv.only) {
+              const targetNode = document.querySelector(cv.target);
+              targetNode && cv.on && cv.valueArr.forEach(cvv => {
+                targetNode.style[cvv.key] = cvv.value;
+              });
+            } else {
+              const targetNodeArr = document.querySelectorAll(cv.target);
+              targetNodeArr && cv.on && cv.valueArr.forEach(cvv => {
+                targetNodeArr.forEach(target => {
+                  // 是否有排除项
+                  if (!cv.excepetTarget) {
+                    target.style[cvv.key] = cvv.value;
+                  } else {
+                    const regexp = new RegExp(cv.excepetTarget);
+                    if(!(regexp.test(target.className))) {
+                      target.style[cvv.key] = cvv.value;
+                    }
+                  }
+                });
+              });
             }
           });
-          document.querySelectorAll('p').forEach(cv => {cv.style.margin = '0px'})
-          document.querySelectorAll('h3').forEach(cv => {cv.style.margin = '0px'})
-          document.querySelectorAll('h4').forEach(cv => {cv.style.margin = '0px'})
-          break;
-        default:
-          break;
-      }
+        }
+        // scripts
+        if (rule.scriptRules.length) {
+
+        }
+      }, 3000);
     }
+  } else {
+    console.log('not match');
   }
 });
+
+// 与 popup 通信
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.cmd === 'popup') {
+    sendResponse(locationRule);
+  }
+});
+
+

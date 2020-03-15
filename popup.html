@@ -1,17 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adjust Popup</title>
+  <link rel="stylesheet" href="./css/reset.css">
+  <style type="text/css">
+    ul{
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+    }
+    li {
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      border-bottom: 1px solid #ccc;
+    }
+    span{
+      white-space: nowrap;
+    }
+    .valueList {
+      padding: 0px;
+    }
+    .valueTitle{
+
+    }
+    .valueItem {
+      align-content: flex-start;
+      padding-left: 6px;
+    }
+  </style>
 </head>
+
 <body>
-  <p>当前网站地址<span>总开关</span><span>删除</span></p>
-  <ul>
-    <li>规则1<span>开关1</span><span>删除</span></li>
-    <li>规则2<span>开关2</span><span>删除</span></li>
-    <li>脚本<span>开关2</span><span>删除</span></li>
-  </ul>
-  <span>更多编辑</span>
+  <div id="list"></div>
+  <script src="./js/popup.js" type="text/javascript"></script>
 </body>
+
 </html>

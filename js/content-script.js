@@ -1,9 +1,18 @@
-let locationRule = null;
+var locationRule = null;
 
-// 与 background 通信
-chrome.runtime.sendMessage({
-  location: document.location
-}, (rule) => {
+function ping() {
+  chrome.runtime.sendMessage({
+    location: document.location
+  }, rule => {
+    if(chrome.runtime.lastError) {
+      setTimeout(ping, 1000);
+    } else {
+      change(rule);
+    }
+  });
+}
+
+function change(rule) {
   if (rule) {
     window.onload = function() {
       locationRule = rule;
@@ -38,14 +47,16 @@ chrome.runtime.sendMessage({
         }
         // scripts
         if (rule.scriptRules.length) {
-
         }
       }, 3000);
     }
   } else {
     console.log('not match');
   }
-});
+}
+
+ping();
+
 
 // 与 popup 通信
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

@@ -2,6 +2,7 @@ const ruleArray = [
   {
     hostname: 'mp.weixin.qq.com',
     urlparams: '',
+    on: true,
     scriptRules: [],
     styleRules: [
       {
@@ -10,6 +11,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 1,
             key: 'display',
             value: 'none',
           }
@@ -22,6 +24,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 2,
             key: 'maxWidth',
             value: '1377px',
           }
@@ -33,6 +36,7 @@ const ruleArray = [
   {
     hostname: 'juejin.im',
     urlparams: '',
+    on: true,
     scriptRules: [],
     styleRules: [
       {
@@ -41,6 +45,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 1,
             key: 'maxWidth',
             value: '1260px',
           }
@@ -53,6 +58,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 2,
             key: 'width',
             value: '1200px',
           }
@@ -65,6 +71,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 3,
             key: 'right',
             value: '30px',
           }
@@ -77,10 +84,12 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 4,
             key: 'left',
             value: '10px',
           },
           {
+            id: 5,
             key: 'position',
             value: 'fixed'
           }
@@ -93,6 +102,7 @@ const ruleArray = [
         excepetTarget: 'catalog-block.pure',
         valueArr: [
           {
+            id: 6,
             key: 'display',
             value: 'none',
           }
@@ -105,6 +115,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 7,
             key: 'margin',
             value: '0px',
           }
@@ -117,6 +128,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 8,
             key: 'margin',
             value: '0px',
           }
@@ -129,6 +141,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 9,
             key: 'margin',
             value: '0px',
           }
@@ -141,6 +154,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 10,
             key: 'margin',
             value: '0px',
           }
@@ -153,6 +167,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
+            id: 11,
             key: 'margin',
             value: '0px',
           }
@@ -167,8 +182,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const target = ruleArray.filter(cv => {
     return cv.hostname === request.location.hostname
   })[0];
-  console.log('target: ', target);
   sendResponse(target ? target : null);
 });
 
 
+chrome.runtime.onConnect.addListener((port) => {
+  port.onMessage.addListener(msg => {
+    console.log('msg: ', msg);
+  })
+});

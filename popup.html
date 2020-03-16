@@ -16,9 +16,27 @@
 </head>
 
 <body>
-  <div id="list"></div>
+  <div id="list">
+    <!-- <ul class="rules" v-for="item in list">
+      <h3 class="ruleTitle">
+        <span>{{item.hostname}}</span>
+        <input type="radio" name="" id="" checked="item.on"  @click="item.on = !item.on">
+      </h3>
+      <ul class="ruleList">
+        <li class="ruleItem" v-for="styleRules in item.styleRules"> 
+          <dl class="valueList">
+            <dt>{{styleRules.target}}</dt>
+            <dd v-for="valueItem in styleRules.valueArr" :key="valueItem.id">{{valueItem.key}}:{{valueItem.value}}</dd>
+          </dl>
+          <div class="valueSwitch">
+            <input type="radio" name="" id="" checked="styleRules.on" @click="styleRules.on = !styleRules.on">
+          </div>
+        </li>
+      </ul>
+    </ul> -->
+  </div>
   <!-- import popupJs -->
-  <script src="./js/popup.js"></script>
+  <script type="text/javascript" src="./js/popup.js"></script>
 </body>
 
 </html>

@@ -183,11 +183,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return cv.hostname === request.location.hostname
   })[0];
   sendResponse(target ? target : null);
+  // sendResponse(null);
 });
 
-
-chrome.runtime.onConnect.addListener((port) => {
-  port.onMessage.addListener(msg => {
-    console.log('msg: ', msg);
-  })
-});

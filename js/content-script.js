@@ -57,12 +57,9 @@ function change(rule) {
 
 ping();
 
-
 // 与 popup 通信
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.cmd === 'popup') {
     sendResponse(locationRule);
   }
 });
-
-

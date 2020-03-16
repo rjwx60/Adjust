@@ -32,7 +32,8 @@
     "notifications", 
     "webRequest", 
     "webRequestBlocking", 
-    "storage"
+		"storage",
+		"tabs"
 	],
 	"options_page": "options.html",
 	"options_ui":

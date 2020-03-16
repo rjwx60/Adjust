@@ -1,10 +1,17 @@
 // 与 concept-script 通信
-function sendMessageToContentScript(message, callback){
+sendMessageToContentScript({ cmd: 'popup' }, (response) => {
+  if (response) {
+    console.log('response: ', response);
+    init(response.styleRules, response.scriptRules);
+  }
+})
+
+function sendMessageToContentScript(message, callback) {
   chrome.tabs.query({
     active: true,
     currentWindow: true
-  }, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, message, function(response) {
+  }, function (tabs) {
+    chrome.tabs.sendMessage(tabs[ 0 ].id, message, function (response) {
       if (callback) {
         callback(response);
       }
@@ -12,29 +19,26 @@ function sendMessageToContentScript(message, callback){
   })
 }
 
-sendMessageToContentScript({cmd: 'popup'}, (response) => {
-  const list = document.querySelector('#list');
-  const UlNode = document.createElement('ul');
-  const styleRules = response.styleRules;
-  list.innerHTML = `<h3>${response.hostname}</h3>`;
-  styleRules.forEach(cv => {
-    let listValue = '';
-    cv.valueArr.forEach(cvv => {
-      listValue += `<dl class="valueItem">${cvv.key}:${cvv.value};</dl>`
-    });
-
-    UlNode.innerHTML += `
-    <li>
-      <dl class="valueList">
-        <dt class="valueTitle">${cv.target}</dt>
-        ${listValue}
-      </dl>
-      <input type="radio" name="" id="" checked="${cv.on}">
-    </li>
-    `;
+function init(styleRules, scriptRules) {
+  new Vue({
+    el: '#list',
+    data: {
+      styleRules: styleRules,
+      scriptRules: scriptRules,
+      visible: false,
+      blogTitle: 'hi'
+    },
+    methods: {
+      show: function () {
+        this.visible = true;
+      }
+    },
+    // render: function (createElement) {
+    //   return createElement('h1', this.blogTitle)
+    // }
   });
-  list.appendChild(UlNode);
-})
+}
+
 
 
 // {

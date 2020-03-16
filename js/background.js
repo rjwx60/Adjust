@@ -164,11 +164,10 @@ const ruleArray = [
 ]
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('request: ', request);
-  console.log('sender: ', sender);
   const target = ruleArray.filter(cv => {
     return cv.hostname === request.location.hostname
   })[0];
+  console.log('target: ', target);
   sendResponse(target ? target : null);
 });
 

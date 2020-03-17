@@ -59,6 +59,12 @@ ping();
 
 // 与 popup 通信
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.error) {
+    console.log('popup.error: ', request.error);
+  }
+  if (request.success) {
+    console.log('popup.success: ', request.success);
+  }
   if (request.cmd === 'popup') {
     sendResponse(locationRule);
   }

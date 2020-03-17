@@ -3,6 +3,7 @@ const ruleArray = [
     hostname: 'mp.weixin.qq.com',
     urlparams: '',
     on: true,
+    id: 12323,
     scriptRules: [],
     styleRules: [
       {
@@ -11,7 +12,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 1,
+            id: 1123,
             key: 'display',
             value: 'none',
           }
@@ -24,7 +25,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 2,
+            id: 2141,
             key: 'maxWidth',
             value: '1377px',
           }
@@ -37,6 +38,7 @@ const ruleArray = [
     hostname: 'juejin.im',
     urlparams: '',
     on: true,
+    id: 123232328,
     scriptRules: [],
     styleRules: [
       {
@@ -45,7 +47,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 1,
+            id: 112153,
             key: 'maxWidth',
             value: '1260px',
           }
@@ -58,7 +60,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 2,
+            id: 221124,
             key: 'width',
             value: '1200px',
           }
@@ -71,7 +73,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 3,
+            id: 323131,
             key: 'right',
             value: '30px',
           }
@@ -84,12 +86,12 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 4,
+            id: 4232,
             key: 'left',
             value: '10px',
           },
           {
-            id: 5,
+            id: 54231,
             key: 'position',
             value: 'fixed'
           }
@@ -102,7 +104,7 @@ const ruleArray = [
         excepetTarget: 'catalog-block.pure',
         valueArr: [
           {
-            id: 6,
+            id: 613123,
             key: 'display',
             value: 'none',
           }
@@ -115,7 +117,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 7,
+            id: 721351,
             key: 'margin',
             value: '0px',
           }
@@ -128,7 +130,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 8,
+            id: 8123,
             key: 'margin',
             value: '0px',
           }
@@ -141,7 +143,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 9,
+            id: 9123,
             key: 'margin',
             value: '0px',
           }
@@ -154,7 +156,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 10,
+            id: 10123,
             key: 'margin',
             value: '0px',
           }
@@ -167,7 +169,7 @@ const ruleArray = [
         excepetTarget: '',
         valueArr: [
           {
-            id: 11,
+            id: 1124232,
             key: 'margin',
             value: '0px',
           }

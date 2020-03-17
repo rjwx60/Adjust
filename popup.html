@@ -121,6 +121,44 @@
 
 <body>
   <div id="list">
+    <ul class="rules" v-for="(item, listIndex) in list" :key="listIndex">
+      <h3 class="ruleTitle">
+        <span>当前域名：{{item.hostname}}</span>
+        <div class="statusSwitch" v-if="item.on">
+          <input class="switch" type="radio" :name="'label' + item.id" :id="'label' + item.id" v-model="item.on"  @click="changeStatus(item)">
+          <label :for="'label' + item.id"></label>
+        </div>
+      </h3>
+      <ul class="ruleList" v-if="item.styleRules.length">
+        <p>Style规则：</p>
+        <li class="ruleItem" v-for="(styleRules, index) in item.styleRules" :key="index"> 
+          <ul class="valueList">
+            <li class="vltitle">{{styleRules.target}}</li>
+            <div class="vlvalue">
+              <li v-for="valueItem in styleRules.valueArr">{{valueItem.key}}:{{valueItem.value}}</li>
+            </div>
+          </ul>
+          <div class="valueSwitch">
+            <input class="switch" type="radio" :name="'label' + index" :id="'label' + index" v-model="styleRules.on" @click="changeStatus(styleRules)">
+            <label :for="'label' + index"></label>
+          </div>
+        </li>
+      </ul>
+      <ul class="ruleList" v-if="item.scriptRules.length">
+        <p>Script规则：</p>
+        <li class="ruleItem" v-for="(scriptRules, index) in item.scriptRules" :key="index"> 
+          <ul class="valueList">
+            <li class="vltitle">{{scriptRules.target}}</li>
+            <div class="vlvalue">
+              <li v-for="valueItem in scriptRules.valueArr">{{valueItem.key}}:{{valueItem.value}}</li>
+            </div>
+          </ul>
+          <div class="valueSwitch">
+            <input class="switch" type="radio" :name="'label' + index" :id="'label' + index" v-model="scriptRules.on" @click="changeStatus(scriptRules)">
+            <label :for="'label' + index"></label>
+          </div>
+        </li>
+      </ul>
   </div>
   <!-- import popupJs -->
   <script type="text/javascript" src="./js/popup.js"></script>

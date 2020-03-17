@@ -13,27 +13,114 @@
   <link rel="stylesheet" href="./css/vue_iview.css">
   <!-- import iView -->
   <script src="./js/vue_iview.min.js"></script>
+  <!-- normal style -->
+  <style type="text/css">
+    /* 头部 */
+    .rules {
+      padding: 10px;
+      background: yellowgreen;
+    }
+
+    .ruleTitle {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .statusSwitch {
+      margin-left: 10px;
+    }
+
+
+    /* 列表 */
+    .ruleItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .valueList {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .vltitle {
+      width: 300px;
+      overflow: auto;
+    }
+
+    .vlvalue {
+      padding-left: 10px;
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+
+    /* label */
+    .switch {
+      display: none;
+    }
+
+    .switch+label {
+      display: block;
+      position: relative;
+      cursor: pointer;
+      padding: 2px;
+      width: 50px;
+      height: 26px;
+      background-color: #ddd;
+      border-radius: 60px;
+    }
+
+    .switch+label:before,
+    .switch+label:after {
+      display: block;
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      bottom: 1px;
+      content: "";
+    }
+
+    .switch+label:after {
+      width: 24px;
+      height: 24px;
+      background-color: #fff;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      transition: margin 0.4s;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+    }
+
+    .switch+label:before {
+      right: 1px;
+      background-color: #f1f1f1;
+      border-radius: 60px;
+      transition: background 0.4s;
+    }
+
+    .switch:checked+label:before {
+      background-color: #8ce196;
+    }
+
+    .switch:checked+label:after {
+      margin-left: 26px;
+    }
+  </style>
 </head>
 
 <body>
   <div id="list">
-    <ul class="rules" v-for="item in list">
-      <h3 class="ruleTitle">
-        <span>{{item.hostname}}</span>
-        <input type="radio" name="" id="" checked="item.on"  @click="item.on = !item.on">
-      </h3>
-      <ul class="ruleList">
-        <li class="ruleItem" v-for="styleRules in item.styleRules"> 
-          <dl class="valueList">
-            <dt>{{styleRules.target}}</dt>
-            <dd v-for="valueItem in styleRules.valueArr" :key="valueItem.id">{{valueItem.key}}:{{valueItem.value}}</dd>
-          </dl>
-          <div class="valueSwitch">
-            <input type="radio" name="" id="" checked="styleRules.on" @click="styleRules.on = !styleRules.on">
-          </div>
-        </li>
-      </ul>
-    </ul>
   </div>
   <!-- import popupJs -->
   <script type="text/javascript" src="./js/popup.js"></script>

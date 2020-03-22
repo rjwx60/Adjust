@@ -12,6 +12,16 @@ function ping() {
   });
 }
 
+function rePing() {
+  chrome.runtime.sendMessage({
+    location: document.location
+  }, rule => {
+    if(chrome.runtime.lastError) {
+      setTimeout(ping, 1000);
+    }
+  });
+}
+
 function change(rule) {
   if (rule) {
     window.onload = function() {
@@ -57,15 +67,23 @@ function change(rule) {
 
 ping();
 
-// 与 popup 通信
+
+// popup/background -> content-script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  // logger
   if (request.error) {
     console.log('popup.error: ', request.error);
-  }
-  if (request.success) {
+    rePing();
+  } else if(request.success) {
     console.log('popup.success: ', request.success);
+  } else if(request.info) {
+    console.log('info', request);
   }
+  // main 
   if (request.cmd === 'popup') {
     sendResponse(locationRule);
   }
+  // Error: The message port closed before a response was received
+  // Add this can reduce it
+  return true;
 });

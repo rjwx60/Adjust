@@ -15,6 +15,10 @@
   <script src="./js/vue_iview.min.js"></script>
   <!-- normal style -->
   <style type="text/css">
+    #app {
+      padding: 6px 10px;
+    }
+
     /* 头部 */
     .rules {
       padding: 10px;
@@ -49,8 +53,8 @@
     }
 
     .vltitle {
-      width: 300px;
-      overflow: auto;
+      width: 200px;
+      overflow-x: auto;
     }
 
     .vlvalue {
@@ -69,7 +73,7 @@
       display: none;
     }
 
-    .switch+label {
+    .switchLabel {
       display: block;
       position: relative;
       cursor: pointer;
@@ -80,8 +84,8 @@
       border-radius: 60px;
     }
 
-    .switch+label:before,
-    .switch+label:after {
+    .switchLabel:before,
+    .switchLabel:after {
       display: block;
       position: absolute;
       top: 1px;
@@ -90,48 +94,57 @@
       content: "";
     }
 
-    .switch+label:after {
+    .switchLabel:after {
       width: 24px;
       height: 24px;
       background-color: #fff;
       border-radius: 50%;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-      transition: margin 0.4s;
+      transition: all 0.4s ease-in-out;
       top: 50%;
       left: 4px;
       transform: translateY(-50%);
     }
 
-    .switch+label:before {
+    /* 按钮颜色 */
+    .switchLabel:before {
       right: 1px;
       background-color: #f1f1f1;
       border-radius: 60px;
-      transition: background 0.4s;
+      transition: all 0.4s ease-in-out;
     }
-
-    .switch:checked+label:before {
+    
+    /* .switch:checked+label:before {
       background-color: #8ce196;
     }
 
     .switch:checked+label:after {
+      margin-left: 26px;
+    } */
+    
+    .switchCheckedLabel:before {
+      background-color: #8ce196;
+    }
+    .switchCheckedLabel:after {
       margin-left: 26px;
     }
   </style>
 </head>
 
 <body>
-  <div id="list">
-    <ul class="rules" v-for="(item, listIndex) in list" :key="listIndex">
+  <div id="app">
+    <!-- <ul class="rules" v-for="(item, listIndex) in list" :key="listIndex">
       <h3 class="ruleTitle">
         <span>当前域名：{{item.hostname}}</span>
         <div class="statusSwitch" v-if="item.on">
-          <input class="switch" type="radio" :name="'label' + item.id" :id="'label' + item.id" v-model="item.on"  @click="changeStatus(item)">
+          <input class="switch" type="radio" :name="'label' + item.id" :id="'label' + item.id" v-model="item.on"
+            @click="changeStatus(item)">
           <label :for="'label' + item.id"></label>
         </div>
       </h3>
       <ul class="ruleList" v-if="item.styleRules.length">
         <p>Style规则：</p>
-        <li class="ruleItem" v-for="(styleRules, index) in item.styleRules" :key="index"> 
+        <li class="ruleItem" v-for="(styleRules, index) in item.styleRules" :key="index">
           <ul class="valueList">
             <li class="vltitle">{{styleRules.target}}</li>
             <div class="vlvalue">
@@ -139,14 +152,15 @@
             </div>
           </ul>
           <div class="valueSwitch">
-            <input class="switch" type="radio" :name="'label' + index" :id="'label' + index" v-model="styleRules.on" @click="changeStatus(styleRules)">
+            <input class="switch" type="radio" :name="'label' + index" :id="'label' + index" v-model="styleRules.on"
+              @click="changeStatus(styleRules)">
             <label :for="'label' + index"></label>
           </div>
         </li>
       </ul>
       <ul class="ruleList" v-if="item.scriptRules.length">
         <p>Script规则：</p>
-        <li class="ruleItem" v-for="(scriptRules, index) in item.scriptRules" :key="index"> 
+        <li class="ruleItem" v-for="(scriptRules, index) in item.scriptRules" :key="index">
           <ul class="valueList">
             <li class="vltitle">{{scriptRules.target}}</li>
             <div class="vlvalue">
@@ -154,11 +168,12 @@
             </div>
           </ul>
           <div class="valueSwitch">
-            <input class="switch" type="radio" :name="'label' + index" :id="'label' + index" v-model="scriptRules.on" @click="changeStatus(scriptRules)">
+            <input class="switch" type="radio" :name="'label' + index" :id="'label' + index" v-model="scriptRules.on"
+              @click="changeStatus(scriptRules)">
             <label :for="'label' + index"></label>
           </div>
         </li>
-      </ul>
+      </ul> -->
   </div>
   <!-- import popupJs -->
   <script type="text/javascript" src="./js/popup.js"></script>

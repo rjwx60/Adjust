@@ -10,6 +10,7 @@ const ruleArray = [
         only: true,
         target: '.qr_code_pc',
         excepetTarget: '',
+        id: 123141555,
         valueArr: [
           {
             id: 1123,
@@ -23,6 +24,7 @@ const ruleArray = [
         only: true,
         target: '.rich_media_area_primary_inner',
         excepetTarget: '',
+        id: 123141553,
         valueArr: [
           {
             id: 2141,
@@ -45,6 +47,7 @@ const ruleArray = [
         only: true,
         target: 'main.container',
         excepetTarget: '',
+        id: 1231415211,
         valueArr: [
           {
             id: 112153,
@@ -58,6 +61,7 @@ const ruleArray = [
         only: true,
         target: '.main-area',
         excepetTarget: '',
+        id: 12314152119,
         valueArr: [
           {
             id: 221124,
@@ -71,6 +75,7 @@ const ruleArray = [
         only: true,
         target: '.article-suspended-panel',
         excepetTarget: '',
+        id: 123141521993,
         valueArr: [
           {
             id: 323131,
@@ -84,6 +89,7 @@ const ruleArray = [
         only: true,
         target: '.sidebar',
         excepetTarget: '',
+        id: 12314152167233,
         valueArr: [
           {
             id: 4232,
@@ -102,6 +108,7 @@ const ruleArray = [
         only: false,
         target: '.sidebar-block',
         excepetTarget: 'catalog-block.pure',
+        id: 12314152143245,
         valueArr: [
           {
             id: 613123,
@@ -115,6 +122,7 @@ const ruleArray = [
         only: false,
         target: 'p',
         excepetTarget: '',
+        id: 1231415211013,
         valueArr: [
           {
             id: 721351,
@@ -128,6 +136,7 @@ const ruleArray = [
         only: false,
         target: 'h3',
         excepetTarget: '',
+        id: 1231415211032,
         valueArr: [
           {
             id: 8123,
@@ -141,6 +150,7 @@ const ruleArray = [
         only: false,
         target: 'h4',
         excepetTarget: '',
+        id: 123141521191231,
         valueArr: [
           {
             id: 9123,
@@ -154,6 +164,7 @@ const ruleArray = [
         only: false,
         target: 'ol',
         excepetTarget: '',
+        id: 123141521211419,
         valueArr: [
           {
             id: 10123,
@@ -167,6 +178,7 @@ const ruleArray = [
         only: false,
         target: 'pre',
         excepetTarget: '',
+        id: 1231231012,
         valueArr: [
           {
             id: 1124232,
@@ -181,10 +193,12 @@ const ruleArray = [
 ]
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  // tab open -> target
   const target = ruleArray.filter(cv => {
     return cv.hostname === request.location.hostname
   })[0];
+  // target -> sendResponse -> content-script
   sendResponse(target ? target : null);
-  // sendResponse(null);
+  return true;
 });
 

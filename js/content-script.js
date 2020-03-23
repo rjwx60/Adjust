@@ -73,7 +73,6 @@ function change(rule) {
 
 ping();
 
-
 // popup/background -> content-script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // logger

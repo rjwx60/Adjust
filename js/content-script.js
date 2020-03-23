@@ -7,30 +7,36 @@ function ping() {
     if(chrome.runtime.lastError) {
       setTimeout(ping, 1000);
     } else {
-      change(rule);
+      locationRule = rule;
+      change(locationRule);
     }
   });
 }
 
 function rePing() {
-  chrome.runtime.sendMessage({
-    location: document.location
-  }, rule => {
-    if(chrome.runtime.lastError) {
-      setTimeout(ping, 1000);
-    }
-  });
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({
+      location: document.location
+    }, rule => {
+      if(chrome.runtime.lastError) {
+        setTimeout(ping, 1000);
+        reject()
+      } else {
+        locationRule = rule;
+        resolve(rule);
+      }
+    });
+  })
 }
 
 function change(rule) {
   if (rule) {
     window.onload = function() {
-      locationRule = rule;
       setTimeout(() => {
         // styles
         if (rule.styleRules.length) {
           const styleRules = rule.styleRules;
-          styleRules.forEach(cv => {
+          rule.on && styleRules.forEach(cv => {
             // 是否单一节点
             if (cv.only) {
               const targetNode = document.querySelector(cv.target);
@@ -81,7 +87,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   // main 
   if (request.cmd === 'popup') {
-    sendResponse(locationRule);
+    // send to popup
+    rePing().then(response  => {
+      sendResponse(response);
+    })
   }
   // Error: The message port closed before a response was received
   // Add this can reduce it

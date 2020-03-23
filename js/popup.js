@@ -32,7 +32,6 @@ function logger(log) {
 function createHTML() {
   let list = document.querySelector("#app");
 
-
   let styleRuleItem = "", styleItemValue = "", scriptRuleItem = "";
 
   // 样式规则
@@ -103,14 +102,15 @@ function createHTML() {
 </h3>`;
 
   let help = `
-<p>添加规则</p>
-<p>刷新页面</p>
+<p><button class="addRuleBtn">添加规则</button></p>
+<p><button class="refreshBtn">刷新页面</button></p>
 `;
 
   list.innerHTML = title + styleRules + scriptRules + help;
   setTimeout(() => {
     addListener(list);
   }, 50);
+  logger(list.innerHTML);
 }
 
 function matchKey(target, id) {
@@ -127,26 +127,42 @@ function matchKey(target, id) {
 }
 
 function addListener(parentNode) {
+  // label events
   const radioInputList = parentNode.querySelectorAll("label");
-  setTimeout(() => {
-    radioInputList && radioInputList.forEach(cv => {
-        cv.addEventListener("click", event => {
-          const targetId = event.target.getAttribute("for").replace(/label/, "");
-          // matchKey(currentTarget, targetId, cv.parentNode.children[0]);
-          matchKey(currentTarget, targetId);
-          createHTML();
-        });
-      });
-  }, 100)
+  radioInputList && radioInputList.forEach(cv => {
+    cv.addEventListener("click", event => {
+      const targetId = event.target.getAttribute("for").replace(/label/, "");
+      matchKey(currentTarget, targetId);
+      createHTML();
+    });
+  });
+
+  // refresh 
+  const refreshBtn = parentNode.querySelector('.refreshBtn');
+  refreshBtn && refreshBtn.addEventListener('click', () => {
+    refreshStatus();
+  });
+
+  // addrule
+  const addRuleBtn = parentNode.querySelector('.addRuleBtn');
+  addRuleBtn && addRuleBtn.addEventListener('click', () => {
+    addRules();
+  });
 }
 
 function refreshStatus() {
-  console.log("存储并刷新页面");
-  // 存储实现
+  setStorage().then(response => {
+    logger(response);
+  })
 }
 
 function addRules() {
   console.log("跳转 background 页");
+}
+
+function setStorage() {
+  const bgPage = chrome.extension.getBackgroundPage();
+  return bgPage.setStorage(currentTarget);
 }
 
 // main logic
@@ -160,3 +176,4 @@ sendMessage({ cmd: "popup" }, function(response) {
     }
   }
 });
+

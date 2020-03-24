@@ -1,14 +1,14 @@
 var locationRule = null;
 
-function ping() {
+function ConscriptInit() {
   chrome.runtime.sendMessage({
     location: document.location
   }, rule => {
     if(chrome.runtime.lastError) {
-      setTimeout(ping, 1000);
+      setTimeout(ConscriptInit, 1000);
     } else {
       locationRule = rule;
-      change(locationRule);
+      changePageStructure(locationRule);
     }
   });
 }
@@ -19,7 +19,7 @@ function rePing() {
       location: document.location
     }, rule => {
       if(chrome.runtime.lastError) {
-        setTimeout(ping, 1000);
+        setTimeout(ConscriptInit, 1000);
         reject()
       } else {
         locationRule = rule;
@@ -29,7 +29,7 @@ function rePing() {
   })
 }
 
-function change(rule) {
+function changePageStructure(rule) {
   if (rule) {
     window.onload = function() {
       setTimeout(() => {
@@ -71,26 +71,37 @@ function change(rule) {
   }
 }
 
-ping();
+// connect & refresh
+ConscriptInit();
 
 // popup/background -> content-script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // logger
-  if (request.error) {
-    console.log('popup.error: ', request.error);
-    rePing();
-  } else if(request.success) {
-    console.log('popup.success: ', request.success);
-  } else if(request.info) {
-    console.log('info', request);
+  switch(request.type) {
+    case 'info':
+      console.log('info', request.info);
+      break;
+    case 'success':
+      console.log('popup.success: ', request.success);
+      break;
+    case 'error':
+      console.log('popup.error: ', request.error);
+      rePing();
+      break;
+    case 'refresh':
+      document.location.reload();
+      break;
+    default:
+      break;
   }
-  // main 
-  if (request.cmd === 'popup') {
-    // send to popup
+
+  // popup logic
+  if (request.popup) {
     rePing().then(response  => {
       sendResponse(response);
     })
   }
+
   // Error: The message port closed before a response was received
   // Add this can reduce it
   return true;

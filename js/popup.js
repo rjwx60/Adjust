@@ -18,16 +18,14 @@ function sendMessage(message, callback) {
 }
 
 // 日志服务
-function logger(log) {
-  if(log && typeof log !== 'object'){
+function logger(type, log) {
+  if(log){
     sendMessage({
+      type: type,
       info: log
-    });
-  } else {
-    sendMessage(log);
+    })
   }
 }
-
 
 function createHTML() {
   let list = document.querySelector("#app");
@@ -110,7 +108,6 @@ function createHTML() {
   setTimeout(() => {
     addListener(list);
   }, 50);
-  logger(list.innerHTML);
 }
 
 function matchKey(target, id) {
@@ -121,7 +118,6 @@ function matchKey(target, id) {
     if (target[key] == `${id}`) {
       target.on = !target.on;
       // target.on ? element.className = 'switchlabel switchlabelChecked' : element.className = 'switchlabel';
-      // logger(element.className);
     }
   }
 }
@@ -151,29 +147,39 @@ function addListener(parentNode) {
 }
 
 function refreshStatus() {
-  setStorage().then(response => {
-    logger(response);
+  setCRXStorage().then(response => {
+    if (!response.error) {
+      logger('refresh', 'refresh current page')
+    } else {
+      logger('info', response);
+    }
   })
 }
 
 function addRules() {
-  console.log("跳转 background 页");
+  window.open(chrome.extension.getURL('background.html'));
 }
 
-function setStorage() {
+function setCRXStorage() {
   const bgPage = chrome.extension.getBackgroundPage();
   return bgPage.setStorage(currentTarget);
 }
 
-// main logic
-sendMessage({ cmd: "popup" }, function(response) {
-  if (chrome.runtime.lastError) {
-    logger({ error: chrome.runtime.lastError.message });
-  } else {
-    if (response) {
-      currentTarget = response;
-      createHTML();
+function popupInit() {
+  sendMessage({
+    popup: 'init',
+  }, function(response) {
+    if (chrome.runtime.lastError) {
+      logger('error', chrome.runtime.lastError.message);
+    } else {
+      if (response) {
+        currentTarget = response;
+        createHTML();
+      }
     }
-  }
-});
+  });
+}
+
+// main logic
+popupInit();
 

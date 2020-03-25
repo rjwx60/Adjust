@@ -40,7 +40,7 @@ const ruleArrayTest = [
     hostname: 'juejin.im',
     urlparams: '',
     on: true,
-    id: 123232328,
+    id: 12323232899,
     scriptRules: [],
     styleRules: [
       {
@@ -189,8 +189,32 @@ const ruleArrayTest = [
         on: true
       }
     ]
+  },
+  {
+    hostname: 'github.com',
+    urlparams: '',
+    on: true,
+    id: 12323232812399,
+    scriptRules: [],
+    styleRules: [
+      {
+        only: true,
+        target: '.col-md-9',
+        excepetTarget: '',
+        id: 123141521114991,
+        valueArr: [
+          {
+            id: 1121598993,
+            key: 'width',
+            value: '100%',
+          }
+        ],
+        on: true
+      }
+    ]
   }
-]
+] 
+
 
 var ruleArray = null;
 
@@ -207,7 +231,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     })
   }).then(target => {
     return new Promise((resolve, reject) => {
-      sendResponse(target ? target : null);
+      sendResponse(target);
     })
   }).catch(err => {
     console.log('error: ', err);
@@ -246,21 +270,19 @@ function setStorage(target) {
   })
 }
 
-
-window.onload = function() {
-  Vue.component('todo-item', {
-    props: ['todo'],
-    template: '<li>{{ todo.text }}</li>'
-  })
-  
-  var app = new Vue({
-    el: '#app',
-    data: {
-      groceryList: [
-        { id: 0, text: '蔬菜' },
-        { id: 1, text: '奶酪' },
-        { id: 2, text: '随便其它什么人吃的东西' }
-      ]
-    }
-  })
+function init(rulesList) {
+  if (rulesList) {
+    console.log('rulesList: ', rulesList);
+    new Vue({
+      el: '#app',
+      data: {
+        rulesList
+      }
+    })
+  }
 }
+
+init(ruleArrayTest);
+
+
+// chrome-extension://lnhfhfemehnokhdpeagckiomalhgibfg/background.html

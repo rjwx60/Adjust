@@ -36,7 +36,8 @@ const ruleArrayTest = [
           }
         ]
       }
-    ]
+    ],
+    selected: false
   },
   {
     hostname: "juejin.im",
@@ -201,7 +202,8 @@ const ruleArrayTest = [
           }
         ]
       }
-    ]
+    ],
+    selected: false
   },
   {
     hostname: "github.com",
@@ -225,7 +227,8 @@ const ruleArrayTest = [
           }
         ]
       }
-    ]
+    ],
+    selected: false
   }
 ];
 
@@ -302,8 +305,8 @@ function setStorage(target) {
 
 // 生成随机数
 function randomCode(len = 16, isMix = false) {
-  /**** 去掉了容易混淆的字符oOLl,Vv,Uu,I ****/
-  const cahrs = isMix ? "ABCDEFGHJKMNPQRSTWXYZabcdefghijkmnpqrstwxyz123456789" : '123456789'
+  // 去掉了字符 0
+  const cahrs = isMix ? "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" : '123456789'
   const maxPos = cahrs.length;
   let randomString = "";
   for (i = 0; i < len; i++) {
@@ -312,27 +315,112 @@ function randomCode(len = 16, isMix = false) {
   return randomString;
 }
 
+
 // 列表渲染
 function ruleListRender(rulesList) {
   if (rulesList && rulesList.length) {
     new Vue({
       el: "#app",
       data: {
-        rulesList
+        rulesList,
+        newRule: null,
+        timer: null
       },
       methods: {
-        changeStyle(rule, styleRules, valueItem) {
-          console.log("rule: ", rule);
-          console.log("styleRules: ", styleRules);
-          console.log("valueItem: ", valueItem);
+        changeStyle(rule, valueItem) {
+          if (!this.timer) {
+            this.timer = setTimeout(() => {
+              if(valueItem.combine) {
+                const resultArr = valueItem.combine.split(":");
+                // 格式限制
+                if (resultArr.length === 1) {
+                  this.info('请输入正确格式的 style');
+                  this.timer = null;
+                  return;
+                }
+                // 横线转驼峰处理
+                if(/^([a-z]+[-][a-z]+)*$/.test(resultArr[0])) {
+                  valueItem.key = resultArr[0].replace(/-([a-z])/, (all, letter) => letter.toUpperCase());
+                } 
+                // 信息录入
+                valueItem.key = resultArr[0];
+                valueItem.value = resultArr[1];
+                valueItem.value = /;$/.test(valueItem.value) ? valueItem.value : `${valueItem.value};`;
+                // 主体录入
+                this.newRule = rule;
+                this.timer = null;
+              }
+            }, 5000)
+          }
+
         },
-        toggleRule(status) {
-          status.on = !status.on;
+        toggleRule(rule, styleRules) {
+          styleRules.on = !styleRules.on;
+          this.newRule = rule;
         },
-        deleteOne() {
-          console.log(randomCode());
+        toggleHide(rule){
+          this.rulesList.forEach(cv => {
+            if(cv.selected){
+              cv.selected = false;
+            }
+          })
+          this.newRule = null;
+          rule.selected = true;
         },
-        addOne() {}
+        deleteOne(rule, styleRules, valueItem) {
+          const targetIndex = styleRules.valueArr.findIndex(cv => cv.id === valueItem.id);
+          if (~targetIndex) {
+            styleRules.valueArr.splice(targetIndex, 1);
+          };
+          rule.styleRules = rule.styleRules.filter(cv => cv.target && cv.valueArr.length);
+          this.newRule = rule;
+        },
+        addStyle(rule) {
+          const styleRule = {
+            on: true,
+            only: true,
+            target: "",
+            excepetTarget: "",
+            id: randomCode(),
+            valueArr: [
+              {
+                id: randomCode(),
+                key: "",
+                value: "",
+                combine: ""
+              }
+            ]
+          };
+          rule.styleRules.push(styleRule);
+        },
+        addRule(){
+          this.newRule = {
+            hostname: "",
+            urlparams: "",
+            on: true,
+            id: randomCode(),
+            scriptRules: [],
+            styleRules: [],
+            selected: false
+          };
+          this.rulesList.push(this.newRule)
+          this.addStyle(this.newRule);
+        },
+        refreshRule(){
+          if (this.newRule && this.newRule.hostname ) {
+            this.newRule.styleRules = this.newRule.styleRules.filter(cv => cv.target != '' );
+            this.rulesList.forEach((cv, index, arr) => {
+              if (cv.hostname === this.newRule.hostname) {
+                cv = this.newRule;
+              }
+            })
+          }
+          // TODO: 存储操作
+          console.log(this.rulesList);
+        },
+        info(message) {
+          alert(message);
+        }
       }
     });
   }

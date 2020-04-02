@@ -7,112 +7,78 @@
   <title>Adjust Background</title>
   <!-- vue script -->
   <script src="./js/vue.min.js" type="text/javascript"></script>
-  <link rel="stylesheet" type="text/css" href="http://unpkg.com/view-design/dist/styles/iview.css">
-  <link rel="stylesheet" href="./css/reset.css">
   <!-- Warning: DevTools failed to parse SourceMap -->
   <!-- <script src="./js/vue_iview.min.js" type="text/javascript"></script> -->
   <!-- <script type="text/javascript" src="http://unpkg.com/view-design/dist/iview.min.js"></script> -->
-  <style>
-    /* label */
-    .switch {
-      display: none;
-    }
-    .switch+label {
-      display: block;
-      position: relative;
-      cursor: pointer;
-      padding: 2px;
-      width: 50px;
-      height: 26px;
-      background-color: #ddd;
-      border-radius: 60px;
-    }
-    .switch+label:before,
-    .switch+label:after {
-      display: block;
-      position: absolute;
-      top: 1px;
-      left: 1px;
-      bottom: 1px;
-      content: "";
-    }
-    .switch+label:after {
-      width: 24px;
-      height: 24px;
-      background-color: #fff;
-      border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-      transition: all 0.4s ease-in-out;
-      top: 50%;
-      left: 4px;
-      transform: translateY(-50%);
-    }
-    .switch+label:before {
-      right: 1px;
-      background-color: #f1f1f1;
-      border-radius: 60px;
-      transition: all 0.4s ease-in-out;
-    }
-    .switch:checked+label:before {
-      background-color: #8ce196;
-    }
-    .switch:checked+label:after {
-      margin-left: 26px;
-    }
-  </style>
+  <!-- vue css -->
+  <!-- <link rel="stylesheet" type="text/css" href="http://unpkg.com/view-design/dist/styles/iview.css"> -->
+  <!-- main css -->
+  <link rel="stylesheet" href="./css/reset.css">
+  <link rel="stylesheet" href="./css/background.css">
 </head>
 
 <body>
   <div id="app">
-    <button @click="addRule()">AddRule</button>
-    <button @click="refreshRule()">Refresh</button>
-    <ul v-for="rule in rulesList" v-bind:key="rule.id">
-      <li>
-        <button @click="toggleHide(rule)">展开</button>
-        <h3>
-          <span>域名:<input type="text" v-model="rule.hostname"></span>
-        </h3>
-        <div class="" v-show="rule.selected">
-          <ul class="" v-if="rule.styleRules.length">
-            <p>Style规则:</p>
-            <li class="" v-for="styleRules in rule.styleRules" v-if="styleRules.valueArr.length">
-              <ul class="">
-                <div class="">
-                  <li v-for="valueItem in styleRules.valueArr">
-                    <!-- 展示 -->
-                    <div @keyup="changeStyle(rule, valueItem)">
-                      <input type="text" v-model="styleRules.target">
-                      <input type="text" v-model="valueItem.combine">
-                    </div>
-                    <!-- 开关 -->
-                    <div>
-                      <input class="switch" type="radio" :name="'label' + valueItem.id" :id="'label' + valueItem.id" :checked="styleRules.on" @click="toggleRule(rule, styleRules)">
-                      <label :for="'label' + valueItem.id"></label>
-                    </div>
-                    <!-- 新增 -->
-                    <button @click="addStyle(rule)">Add</button>
-                    <!-- 删除 -->
-                    <button @click="deleteOne(rule, styleRules, valueItem)">Delete</button>
-                  </li>
-                </div>
-              </ul>
-            </li>
-          </ul>
-          <ul class="ruleList" v-if="rule.scriptRules.length">
-            <p>Script规则:</p>
-            <li class="" v-for="(scriptRules, index) in rule.scriptRules" :key="index">
-              <ul class="">
-                <li class="">{{scriptRules.target}}</li>
-                <div class="">
-                  <li v-for="valueItem in scriptRules.valueArr">{{valueItem.key}}:{{valueItem.value}}</li>
-                </div>
-              </ul>
-            </li>
-          </ul>
-        </div>
-        
-      </li>
-    </ul>
+    <div class="container">
+      <!-- 功能按钮 -->
+      <div class="optBtnList">
+        <button @click="addRule()">AddRule</button>
+        <button @click="refreshRule()">Refresh</button>
+      </div>
+      <!-- 规则列表 -->
+      <ul class="ruleList" v-for="rule in rulesList" v-bind:key="rule.id">
+        <li class="ruleListItem">
+          <!-- title -->
+          <h3 class="ruleTitle">
+            <span>域名</span>
+            <input type="text" v-model="rule.hostname">
+            <button @click="toggleHide(rule)">展开</button>
+          </h3>
+          <!-- content -->
+          <div class="ruleContent" v-show="rule.selected">
+            <ul class="valueList" v-if="rule.styleRules.length">
+              <div class="valueTitle">
+                <p>Style规则:</p>
+              </div>
+              <li class="valueLi" v-for="styleRules in rule.styleRules" v-if="styleRules.valueArr.length">
+                <ul class="">
+                  <div class="">
+                    <li class="listItem" v-for="valueItem in styleRules.valueArr">
+                      <!-- 展示 -->
+                      <div class="optionsShow" @keyup="changeStyle(rule, valueItem)">
+                        <input type="text" v-model="styleRules.target">
+                        <input type="text" v-model="valueItem.combine">
+                      </div>
+                      <!-- 开关 -->
+                      <div class="optionsBtn">
+                        <input class="switch" type="radio" 
+                               :name="'label' + valueItem.id" 
+                               :id="'label' + valueItem.id" 
+                               :checked="styleRules.on" @click="toggleRule(rule, styleRules)">
+                        <label :for="'label' + valueItem.id"></label>
+                        <button @click="addStyle(rule)">+</button>
+                        <button @click="deleteOne(rule, styleRules, valueItem)">-</button>
+                      </div>
+                    </li>
+                  </div>
+                </ul>
+              </li>
+            </ul>
+            <ul class="valueList" v-if="rule.scriptRules.length">
+              <p>Script规则:</p>
+              <li class="" v-for="(scriptRules, index) in rule.scriptRules" :key="index">
+                <ul class="">
+                  <li class="">{{scriptRules.target}}</li>
+                  <div class="">
+                    <li class="listItem" v-for="valueItem in scriptRules.valueArr">{{valueItem.key}}:{{valueItem.value}}</li>
+                  </div>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
   <!-- main logic -->
   <script src="./js/hot-reload.js" type="text/javascript"></script>

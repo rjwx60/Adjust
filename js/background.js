@@ -263,8 +263,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // 主逻辑
 function init() {
   getStorage().then(result => {
+    console.log('result: ', result);
+    // globalRuleCache = ruleArrayTest;
+    // ruleListRender(ruleArrayTest);
     globalRuleCache = result;
-    ruleListRender(ruleArrayTest);
+    ruleListRender(result);
   });
 }
 
@@ -273,9 +276,8 @@ function getStorage(target = "rules") {
   // 读取数据，第一个参数是指定要读取的key以及设置默认值
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get(target, function(items) {
-      resolve(ruleArrayTest);
-      console.log("ruleArrayTest: ", ruleArrayTest);
-      // resolve(items.rules);
+      // resolve(ruleArrayTest);
+      resolve(items.rules);
     });
   });
 }
@@ -324,35 +326,27 @@ function ruleListRender(rulesList) {
       data: {
         rulesList,
         newRule: null,
-        timer: null
       },
       methods: {
         changeStyle(rule, valueItem) {
-          if (!this.timer) {
-            this.timer = setTimeout(() => {
-              if(valueItem.combine) {
-                const resultArr = valueItem.combine.split(":");
-                // 格式限制
-                if (resultArr.length === 1) {
-                  this.info('请输入正确格式的 style');
-                  this.timer = null;
-                  return;
-                }
-                // 横线转驼峰处理
-                if(/^([a-z]+[-][a-z]+)*$/.test(resultArr[0])) {
-                  valueItem.key = resultArr[0].replace(/-([a-z])/, (all, letter) => letter.toUpperCase());
-                } 
-                // 信息录入
-                valueItem.key = resultArr[0];
-                valueItem.value = resultArr[1];
-                valueItem.value = /;$/.test(valueItem.value) ? valueItem.value : `${valueItem.value};`;
-                // 主体录入
-                this.newRule = rule;
-                this.timer = null;
-              }
-            }, 5000)
+          console.log('valueItem: ', valueItem);
+          if(valueItem.combine) {
+            const resultArr = valueItem.combine.split(":");
+            // 格式限制
+            if (resultArr.length === 2) {
+              // 横线转驼峰处理
+              if(/^([a-z]+[-][a-z]+)*$/.test(resultArr[0])) {
+                valueItem.key = resultArr[0].replace(/-([a-z])/, (all, letter) => letter.toUpperCase());
+              } 
+              // 信息录入
+              valueItem.key = resultArr[0].trim();
+              valueItem.value = resultArr[1].trim();
+              // fix: 此段需注释掉
+              valueItem.value = /;$/.test(valueItem.value) ? valueItem.value : `${valueItem.value}`;
+              // 主体录入
+              this.newRule = rule;
+            }
           }
-
         },
         toggleRule(rule, styleRules) {
           styleRules.on = !styleRules.on;
@@ -415,8 +409,10 @@ function ruleListRender(rulesList) {
               }
             })
           }
-          // TODO: 存储操作
-          console.log(this.rulesList);
+          // 存储操作
+          chrome.storage.sync.set({ rules: this.rulesList }, function() {
+            alert('save success');
+          });
         },
         info(message) {
           alert(message);
@@ -427,3 +423,17 @@ function ruleListRender(rulesList) {
 }
 
 init();
+
+
+// function getMost(articleNum = 15) {
+//   const arr = [];
+//   document.querySelectorAll('div.entry').forEach(cv => {
+//     arr.push({
+//       title: cv.querySelector('a.title span').innerHTML,
+//       href: cv.querySelector('a.entry-link').href,
+//       count: +cv.querySelector('.count').innerHTML
+//     })
+//   })
+//   return arr.sort((a, b) => b.count - a.count).slice(0, articleNum)
+// }
+// getMost();

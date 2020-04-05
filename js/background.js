@@ -232,67 +232,45 @@ const ruleArrayTest = [
   }
 ];
 
+
+/**
+ * 全局变量
+ */
 var globalRuleCache = null;
 
-// 监听页面变化
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  getStorage()
-    .then(res => {
-      // set ruleArray
-      ruleArray = res;
-      return new Promise((resolve, reject) => {
-        const target =
-          res &&
-          res.filter(cv => {
-            return cv.hostname === request.location.hostname;
-          })[0];
-        target ? resolve(target) : reject("no match target");
-      });
-    })
-    .then(target => {
-      return new Promise((resolve, reject) => {
-        sendResponse(target);
-      });
-    })
-    .catch(err => {
-      console.log("error: ", err);
-    });
-  return true;
-});
 
-// 主逻辑
-function init() {
-  getStorage().then(result => {
-    console.log('result: ', result);
-    // globalRuleCache = ruleArrayTest;
-    // ruleListRender(ruleArrayTest);
-    globalRuleCache = result;
-    ruleListRender(result);
-  });
-}
-
-// 获取存储
+/**
+ * untils 工具函数
+ */
 function getStorage(target = "rules") {
-  // 读取数据，第一个参数是指定要读取的key以及设置默认值
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get(target, function(items) {
-      // resolve(ruleArrayTest);
       resolve(items.rules);
     });
   });
 }
 
-// 设置存储
-function setStorage(target) {
+function setStorage(value = null) {
+  return new Promise((resolve, reject) => {
+    if (value) {
+      // 存储操作
+      chrome.storage.sync.set({ rules: value }, function() {
+        resolve();
+      });
+    }
+    reject('value is null');
+  })
+}
+
+function setNewRule(rule) {
   // 保存数据
   return new Promise((resolve, reject) => {
-    if (target) {
+    if (rule) {
       const index = globalRuleCache.findIndex(
-        cv => cv.hostname == target.hostname
+        cv => cv.hostname == rule.hostname
       );
       if (index !== -1) {
-        globalRuleCache.splice(index, 1, target);
-        // e.g. {color: 'blue'}
+        globalRuleCache.splice(index, 1, rule);
         chrome.storage.sync.set({ rules: globalRuleCache }, function() {
           resolve({
             code: 200,
@@ -305,9 +283,8 @@ function setStorage(target) {
   });
 }
 
-// 生成随机数
+
 function randomCode(len = 16, isMix = false) {
-  // 去掉了字符 0
   const cahrs = isMix ? "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" : '123456789'
   const maxPos = cahrs.length;
   let randomString = "";
@@ -317,9 +294,63 @@ function randomCode(len = 16, isMix = false) {
   return randomString;
 }
 
+function logger(info, content, type = 1) {
+  switch(type) {
+    case 1:
+      console.log(info, content);
+      break;
+    default:
+      break;
+  }
+}
 
-// 列表渲染
-function ruleListRender(rulesList) {
+
+/**
+ * 负责监听页面变化 -> 向 popup 返回请求的 targetRule
+ */
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  getStorage()
+    .then(targetRule => {
+      return new Promise((resolve, reject) => {
+        const target = 
+          targetRule &&
+          targetRule.filter(cv => {
+            return cv.hostname === request.location.hostname;
+          })[0];
+        target ? resolve(target) : resolve(null);
+      });
+    })
+    .then(target => {
+      return new Promise((resolve, reject) => {
+        sendResponse(target);
+      });
+    })
+    .catch(err => {
+      logger('err', err);
+    });
+  return true;
+});
+
+
+
+
+
+
+
+/**
+ * background 页
+ * 负责 background 渲染展示
+ */
+
+function backgroundInit() {
+  getStorage().then(rulesList => {
+    logger('rulesList: ', rulesList)
+    globalRuleCache = rulesList;
+    rulesListRender(rulesList);
+  });
+}
+
+function rulesListRender(rulesList) {
   if (rulesList && rulesList.length) {
     new Vue({
       el: "#app",
@@ -329,7 +360,7 @@ function ruleListRender(rulesList) {
       },
       methods: {
         changeStyle(rule, valueItem) {
-          console.log('valueItem: ', valueItem);
+          logger('valueItem: ', valueItem)
           if(valueItem.combine) {
             const resultArr = valueItem.combine.split(":");
             // 格式限制
@@ -409,10 +440,11 @@ function ruleListRender(rulesList) {
               }
             })
           }
-          // 存储操作
-          chrome.storage.sync.set({ rules: this.rulesList }, function() {
+          setStorage(this.rulesList).then(() => {
             alert('save success');
-          });
+          }).catch((err) => {
+            alert(err);
+          })
         },
         info(message) {
           alert(message);
@@ -422,18 +454,5 @@ function ruleListRender(rulesList) {
   }
 }
 
-init();
 
-
-// function getMost(articleNum = 15) {
-//   const arr = [];
-//   document.querySelectorAll('div.entry').forEach(cv => {
-//     arr.push({
-//       title: cv.querySelector('a.title span').innerHTML,
-//       href: cv.querySelector('a.entry-link').href,
-//       count: +cv.querySelector('.count').innerHTML
-//     })
-//   })
-//   return arr.sort((a, b) => b.count - a.count).slice(0, articleNum)
-// }
-// getMost();
+backgroundInit();

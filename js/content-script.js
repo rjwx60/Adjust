@@ -41,9 +41,6 @@ function changePageStructure(rule) {
             if (cv.only) {
               const targetNode = document.querySelector(cv.target);
               targetNode && cv.on && cv.valueArr.forEach(cvv => {
-                console.log('cvv.key: ', cvv.key);
-                console.log('cvv.value: ', cvv.value);
-                console.log('targetNode.style[cvv.key]: ', targetNode.style[cvv.key]);
                 targetNode.style[cvv.key] = cvv.value;
               });
             } else {

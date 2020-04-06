@@ -32,13 +32,15 @@
           <h3 class="ruleTitle">
             <span>域名</span>
             <input type="text" v-model="rule.hostname">
-            <button @click="toggleHide(rule)">展开</button>
+            <button @click="toggleHide(rule)">{{!rule.selected ? '展开' : '收起'}}</button>
           </h3>
           <!-- content -->
           <div class="ruleContent" v-show="rule.selected">
+            <!-- 样式规则 -->
             <ul class="valueList" v-if="rule.styleRules.length">
               <div class="valueTitle">
                 <p>Style规则:</p>
+                <button @click="addStyle(rule)">+</button>
               </div>
               <li class="valueLi" v-for="styleRules in rule.styleRules" v-if="styleRules.valueArr.length">
                 <ul class="">
@@ -48,15 +50,11 @@
                       <div class="optionsShow" @keyup="changeStyle(rule, valueItem)">
                         <input type="text" v-model="styleRules.target">
                         <input type="text" v-model="valueItem.combine">
-                      </div>
-                      <!-- 开关 -->
-                      <div class="optionsBtn">
                         <input class="switch" type="radio" 
                                :name="'label' + valueItem.id" 
                                :id="'label' + valueItem.id" 
                                :checked="styleRules.on" @click="toggleRule(rule, styleRules)">
                         <label :for="'label' + valueItem.id"></label>
-                        <button @click="addStyle(rule)">+</button>
                         <button @click="deleteOne(rule, styleRules, valueItem)">-</button>
                       </div>
                     </li>
@@ -64,15 +62,19 @@
                 </ul>
               </li>
             </ul>
+            <!-- 脚本规则 -->
             <ul class="valueList" v-if="rule.scriptRules.length">
-              <p>Script规则:</p>
-              <li class="" v-for="(scriptRules, index) in rule.scriptRules" :key="index">
-                <ul class="">
+              <div class="valueTitle">
+                <p>Script规则:</p>
+                <button @click="addScript(rule)">+</button>
+              </div>
+              <li class="valueLi" v-for="scriptRules in rule.scriptRules">
+                <!-- <ul class="">
                   <li class="">{{scriptRules.target}}</li>
                   <div class="">
                     <li class="listItem" v-for="valueItem in scriptRules.valueArr">{{valueItem.key}}:{{valueItem.value}}</li>
                   </div>
-                </ul>
+                </ul> -->
               </li>
             </ul>
           </div>

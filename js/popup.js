@@ -3,6 +3,9 @@
  */
 let globalCurrentRule = null;
 
+
+
+
 /**
  * untils 工具函数
  */
@@ -70,7 +73,7 @@ function addEventListeners(parentNode) {
     cv.addEventListener("click", event => {
       const targetId = event.target.getAttribute("for").replace(/label/, "");
       matchKey(globalCurrentRule, targetId);
-      render();
+      render(globalCurrentRule);
     });
   });
 

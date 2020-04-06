@@ -106,27 +106,31 @@
       transform: translateY(-50%);
     }
 
-    /* 按钮颜色 */
+    /* label color */
     .switchLabel:before {
       right: 1px;
       background-color: #f1f1f1;
       border-radius: 60px;
       transition: all 0.4s ease-in-out;
     }
-    
-    /* .switch:checked+label:before {
-      background-color: #8ce196;
-    }
-
-    .switch:checked+label:after {
-      margin-left: 26px;
-    } */
-    
     .switchCheckedLabel:before {
       background-color: #8ce196;
     }
     .switchCheckedLabel:after {
       margin-left: 26px;
+    }
+
+    /* button */
+    button {
+      padding: 6px 8px;
+      background: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      min-width: 80px;
+      color: #000;
+    }
+    button:hover {
+      background: greenyellow;
     }
   </style>
 </head>

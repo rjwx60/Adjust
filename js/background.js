@@ -257,8 +257,9 @@ function setStorage(value = null) {
       chrome.storage.sync.set({ rules: value }, function() {
         resolve();
       });
+    } else {
+      reject('value is null');
     }
-    reject('value is null');
   })
 }
 
@@ -358,6 +359,9 @@ function rulesListRender(rulesList) {
         rulesList,
         newRule: null,
       },
+      mounted() {
+        this.allHide();
+      },
       methods: {
         changeStyle(rule, valueItem) {
           logger('valueItem: ', valueItem)
@@ -384,13 +388,15 @@ function rulesListRender(rulesList) {
           this.newRule = rule;
         },
         toggleHide(rule){
+          this.newRule = null;
+          rule.selected = !rule.selected;
+        },
+        allHide() {
           this.rulesList.forEach(cv => {
             if(cv.selected){
               cv.selected = false;
             }
           })
-          this.newRule = null;
-          rule.selected = true;
         },
         deleteOne(rule, styleRules, valueItem) {
           const targetIndex = styleRules.valueArr.findIndex(cv => cv.id === valueItem.id);
@@ -418,6 +424,19 @@ function rulesListRender(rulesList) {
           };
           rule.styleRules.push(styleRule);
         },
+        addScript(rule) {
+          // TODO: 展示 + Markdown 更改增加规则按钮位置
+          const scriptRule = {
+            on: true,
+            id: randomCode(),
+            valueArr: [{
+              type: 'string',
+              script: "console.log('script test')"
+            }]
+          };
+          rule.scriptRules.push(scriptRule);
+          console.log('rule: ', rule);
+        },
         addRule(){
           this.newRule = {
             hostname: "",
@@ -430,6 +449,7 @@ function rulesListRender(rulesList) {
           };
           this.rulesList.push(this.newRule)
           this.addStyle(this.newRule);
+          this.addScript(this.newRule);
         },
         refreshRule(){
           if (this.newRule && this.newRule.hostname ) {

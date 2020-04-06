@@ -57,8 +57,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: row;
   margin: 10px 0;
   font-size: 14px;
+}
+.valueTitle > button {
+  background: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  line-height: 18px;
+  text-align: center;
+  padding: 0px;
+  border: 1px solid #ccc;
+  margin: 0 6px;
+  outline: none;
+  cursor: pointer;
+  font-size: 20px;
 }
 .listItem{
   display: flex;
@@ -67,22 +82,21 @@
   align-items: center;
   margin-bottom: 4px;
 }
+.optionsShow{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
 .optionsShow > input{
-  width: 300px;
   background: none;
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 8px;
   margin: 6px;
   text-align: center;
-  
 }
-.optionsBtn{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.optionsBtn > button {
+.optionsShow > button {
   background: none;
   border-radius: 50%;
   width: 26px;

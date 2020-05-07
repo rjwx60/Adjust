@@ -7,6 +7,7 @@
   <title>Adjust Background</title>
   <!-- vue script -->
   <script src="./js/vue.min.js" type="text/javascript"></script>
+  <script src="./js/jquery.3.3.1.js" type="text/javascript"></script>
   <!-- Warning: DevTools failed to parse SourceMap -->
   <!-- <script src="./js/vue_iview.min.js" type="text/javascript"></script> -->
   <!-- <script type="text/javascript" src="http://unpkg.com/view-design/dist/iview.min.js"></script> -->
@@ -80,11 +81,16 @@
           </div>
         </li>
       </ul>
+      <!-- JS 脚本编辑器 -->
+      <div id="editor"></div>
     </div>
   </div>
   <!-- main logic -->
   <script src="./js/hot-reload.js" type="text/javascript"></script>
   <script src="./js/background.js" type="text/javascript"></script>
+  <!-- js ide logic -->
+  <script src="./static/src-min/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/ideinit.js" type="text/javascript"></script>
 </body>
 
 </html>

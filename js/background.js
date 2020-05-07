@@ -284,7 +284,10 @@ function setNewRule(rule) {
   });
 }
 
-
+/**
+ * @param len 构造长度默认16
+ * @param isMix 是否混合，待定保留项
+ */
 function randomCode(len = 16, isMix = false) {
   const cahrs = isMix ? "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" : '123456789'
   const maxPos = cahrs.length;
@@ -295,6 +298,12 @@ function randomCode(len = 16, isMix = false) {
   return randomString;
 }
 
+/**
+ * 日志输出
+ * @param info 信息标题
+ * @param content 信息主体
+ * @param type 打印类型 默认为1 log
+ */
 function logger(info, content, type = 1) {
   switch(type) {
     case 1:
@@ -342,7 +351,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
  * background 页
  * 负责 background 渲染展示
  */
-
 function backgroundInit() {
   getStorage().then(rulesList => {
     logger('rulesList: ', rulesList)

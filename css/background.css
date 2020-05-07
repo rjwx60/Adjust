@@ -165,3 +165,12 @@
 .switch:checked+label:after {
   margin-left: 26px;
 }
+
+
+
+
+/* JS IDE */
+#editor {
+  height: 100%;
+  width: 500px;
+}

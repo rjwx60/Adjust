@@ -1,3 +1,7 @@
+/**
+ * content-script - 常驻脚本
+ */
+
 var locationRule = null;
 
 // popup/background -> content-script

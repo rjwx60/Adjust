@@ -1,3 +1,7 @@
+/**
+ * background - 背景页
+ */
+
 const ruleArrayTest = [
   {
     hostname: "mp.weixin.qq.com",

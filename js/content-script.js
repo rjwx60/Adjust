@@ -4,7 +4,34 @@
 
 var locationRule = null;
 
-// popup/background -> content-script
+/**
+ * popup/background -> content-script
+ */
+
+
+
+
+function ContentScript() {
+  this.locationRule = null;
+}
+
+ContentScript.prototype.rePing = function() {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({
+      location: document.location
+    }, rule => {
+      if(chrome.runtime.lastError) {
+        setTimeout(ConscriptInit, 1000);
+        reject()
+      } else {
+        locationRule = rule;
+        resolve(rule);
+      }
+    });
+  })
+}
+
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // loggers
   switch(request.type) {
@@ -40,15 +67,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-// function loggers (type, content = '', type = 1) {
-//   switch(type) {
-//     case 1: 
-//       console.log(type, content)
-//       break;
-//     default:
-//       break;
-//   }
-// }
 
 function rePing() {
   return new Promise((resolve, reject) => {

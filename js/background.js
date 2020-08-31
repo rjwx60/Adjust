@@ -4,7 +4,7 @@
 // background 不能使用 import 格式且无法被 webpack 处理
 // 因处理后代码函数无法被 popup 通过 chrome.extension.getBackgroundPage.functionName 获取并通信
 // 但想使用 scss 格式，故在此处引入，随 webpack 处理后再在 html 中引入
-import '../css/background.scss'
+// import '../css/background.scss'
 
 const ruleArrayTest = [
   {

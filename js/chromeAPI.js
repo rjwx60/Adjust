@@ -6,4 +6,4 @@ const CRuntime = {
   cruntime: chrome.runtime
 };
 
-export { CRuntime };
+export { CRuntime }

@@ -23,7 +23,7 @@ const ruleArrayTest = [
             value: "none",
             combine: "display:none;"
           }
-        ]
+        ] 
       },
       {
         on: true,
@@ -256,6 +256,8 @@ function getStorage(target = "rules") {
 }
 
 function setStorage(value = null) {
+  console.log('valueeee: ', value);
+
   return new Promise((resolve, reject) => {
     if (value) {
       // 存储操作
@@ -269,6 +271,7 @@ function setStorage(value = null) {
 }
 
 function setNewRule(rule) {
+  console.log('ruleeeeee: ', rule);
   // 保存数据
   return new Promise((resolve, reject) => {
     if (rule) {
@@ -285,6 +288,8 @@ function setNewRule(rule) {
           });
         });
       }
+    } else {
+      reject();
     }
   });
 }

@@ -1,141 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adjust Popup</title>
-  <!-- restCSS -->
   <link rel="stylesheet" href="./css/reset.css">
-  <!-- Vue-->
-  <script src="./js/vue.min.js"></script>
-  <!-- IView -->
-  <link rel="stylesheet" href="./css/vue_iview.css">
-  <script src="./js/vue_iview.min.js"></script>
-  <!-- normal style -->
-  <style type="text/css">
-    #app {
-      padding: 6px 10px;
-    }
-
-    /* 头部 */
-    .rules {
-      padding: 10px;
-      background: yellowgreen;
-    }
-
-    .ruleTitle {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .statusSwitch {
-      margin-left: 10px;
-    }
-
-
-    /* 列表 */
-    .ruleItem {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 4px;
-    }
-
-    .valueList {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .vltitle {
-      width: 200px;
-      overflow-x: auto;
-    }
-
-    .vlvalue {
-      padding-left: 10px;
-      flex: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-
-
-    /* label */
-    .switch {
-      display: none;
-    }
-
-    .switchLabel {
-      display: block;
-      position: relative;
-      cursor: pointer;
-      padding: 2px;
-      width: 50px;
-      height: 26px;
-      background-color: #ddd;
-      border-radius: 60px;
-    }
-
-    .switchLabel:before,
-    .switchLabel:after {
-      display: block;
-      position: absolute;
-      top: 1px;
-      left: 1px;
-      bottom: 1px;
-      content: "";
-    }
-
-    .switchLabel:after {
-      width: 24px;
-      height: 24px;
-      background-color: #fff;
-      border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-      transition: all 0.4s ease-in-out;
-      top: 50%;
-      left: 4px;
-      transform: translateY(-50%);
-    }
-
-    /* label color */
-    .switchLabel:before {
-      right: 1px;
-      background-color: #f1f1f1;
-      border-radius: 60px;
-      transition: all 0.4s ease-in-out;
-    }
-    .switchCheckedLabel:before {
-      background-color: #8ce196;
-    }
-    .switchCheckedLabel:after {
-      margin-left: 26px;
-    }
-
-    /* button */
-    button {
-      padding: 6px 8px;
-      background: none;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      min-width: 80px;
-      color: #000;
-    }
-    button:hover {
-      background: greenyellow;
-    }
-  </style>
+  <link rel="stylesheet" href="./dist/popup.css">
 </head>
 
 <body>
-  <div id="app"></div>
-  <!-- import popupJs -->
+  <div id="app">
+    <!-- <h3 class="ruleTitle">
+      <span>当前域名: juejin.im</span>
+      <div class="statusSwitch"> 
+        <input class="switch" type="radio" name="label12323232899" id="label12323232899" checked="true"> 
+        <label class="switchLabel switchCheckedLabel" for="label12323232899"></label>
+      </div>
+    </h3>
+    <ul class="ruleList">
+      <p>样式规则:</p>
+      <li class="ruleItem">
+        <ul class="valueList">
+          <li class="vltitle">main.container</li>
+          <div class="vlvalue">
+            <li>maxWidth:1260px</li>
+          </div>
+        </ul>
+        <div class="valueSwitch">
+          <input class="switch" type="radio" name="label1231415211" id="label1231415211" checked="true"> 
+          <label class="switchLabel switchCheckedLabel" for="label1231415211"></label>
+        </div>
+      </li>
+    </ul>
+    <ul class="helpText">
+      <li><button class="addRuleBtn">添加规则</button></li>
+      <li><button class="refreshBtn">刷新页面</button></li>
+    </ul> -->
+  </div>
   <script type="text/javascript" src="./dist/popup.js"></script>
 </body>
 

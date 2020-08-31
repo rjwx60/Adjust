@@ -1,101 +1,89 @@
-
-
-
 /**
- * 全局变量
+ * popup 弹出页
  */
-let globalCurrentRule = null;
+
+import '../css/popup.scss'
+import { CRuntime } from './chromeAPI';
+
+function Popup() {
+  this.currentRule = null;
+}
 
 
+Popup.prototype.popupInit = function() {
+  const _this = this;
+  this.popupSendMes({
+    popup: 'init',
+  }, function(rule) {
+    if (CRuntime.lastError) {
+      _this.utils().logger('error', CRuntime.lastError.message);
+    } else {
+      _this.currentRule = rule ? rule : null;
+      _this.render(rule);
+    }
+  });
+}
 
-
-/**
- * untils 工具函数
- */
-function sendMessage(message, callback) {
+Popup.prototype.popupSendMes = function(mes, currentPopupCb = () => {}) {
   chrome.tabs.query({
     active: true,
     currentWindow: true
-  },function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, message, {}, function(response) {
-      if (callback) {
-        callback(response);
-      }
+  }, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, mes, {}, function(response) {
+      currentPopupCb(response);
     });
   });
 }
 
-function logger(type, log) {
-  if(log){
-    sendMessage({
-      type: type,
-      info: log
-    })
-  }
-}
-
-function matchKey(target, id) {
-  for (const key in target) {
-    // 递归匹配
-    if (target[key] && typeof target[key] === "object") {
-      matchKey(target[key], id);
-    }
-    // 开关控制
-    if (target[key] == `${id}`) {
-      target.on = !target.on;
-    }
-  }
-}
-
-
-function refreshRules() {
-  const bgPage = chrome.extension.getBackgroundPage();
-  bgPage.setNewRule(globalCurrentRule).then(response => {
-    if (!response.error) {
-      logger('refresh', 'refresh current page')
-    } else {
-      logger('info', response);
-    }
-  })
-}
-
-function addRules() {
-  window.open(chrome.extension.getURL('background.html'));
-}
-
-
-
-/**
- * popup 页
- * 负责 popup 渲染展示
- */
-function addEventListeners(parentNode) {
-  // 开关切换事件
+Popup.prototype.addEventListeners = function (parentNode) {
+  // 1、开关切换事件
   const radioInputList = parentNode.querySelectorAll("label");
   radioInputList && radioInputList.forEach(cv => {
     cv.addEventListener("click", event => {
       const targetId = event.target.getAttribute("for").replace(/label/, "");
-      matchKey(globalCurrentRule, targetId);
-      render(globalCurrentRule);
+      this.utils().matchKey(this.currentRule, targetId);
+      this.render(this.currentRule);
     });
   });
 
-  // 规则刷新事件
-  const refreshBtn = parentNode.querySelector('.refreshBtn');
-  refreshBtn && refreshBtn.addEventListener('click', () => {
-    refreshRules();
-  });
-
-  // 规则增加事件
+  // 2、规则增加事件
   const addRuleBtn = parentNode.querySelector('.addRuleBtn');
   addRuleBtn && addRuleBtn.addEventListener('click', () => {
-    addRules();
+    this.addRules();
+  });
+
+  // 3、规则刷新事件
+  const refreshBtn = parentNode.querySelector('.refreshBtn');
+  refreshBtn && refreshBtn.addEventListener('click', () => {
+    this.refreshRules();
   });
 }
 
-function render(currentRule) {
+Popup.prototype.refreshRules = function () {
+  // this.utils().logger('info', this.currentRule);
+  const bgPage = chrome.extension.getBackgroundPage();
+  // 通知 background 存储后刷新页面
+  bgPage.setNewRule(this.currentRule).then(response => {
+    if (!response.error) {
+      this.utils().logger('refresh', 'refresh current page');
+    } else {
+      this.utils().logger('info', response);
+    }
+  }).finally(() => {
+    // 通知 contentScript 刷新 tab 页
+    this.utils().logger('refresh', 'refresh current page', () => {
+      // 刷新 popup 页面
+      document.location.reload();
+    });
+  })
+}
+
+Popup.prototype.addRules = function () {
+  window.open(chrome.extension.getURL('background.html'));
+}
+
+Popup.prototype.render = function(currentRule) {
   const list = document.querySelector("#app");
-  logger('info', currentRule);
 
   if (currentRule) {
     let styleRuleItem = "", styleItemValue = "", scriptRuleItem = "";
@@ -168,33 +156,47 @@ function render(currentRule) {
   </h3>`;
   
     help = `
-  <p><button class="addRuleBtn">添加规则</button></p>
-  <p><button class="refreshBtn">刷新页面</button></p>
+    <ul class="helpText">
+      <li><button class="addRuleBtn">添加规则</button></li>
+      <li><button class="refreshBtn">刷新页面</button></li>
+    </ul>
   `;
   
+    // 最终组装
     list.innerHTML = title + styleRules + scriptRules + help;
+    
   } else {
-    list.innerHTML = `<p><button class="addRuleBtn">添加规则</button></p>`;
+    list.innerHTML = `<ul class="helpText">
+    <li><button class="addRuleBtn">添加规则</button></li>
+  </ul>`;
   }
+
   setTimeout(() => {
-    addEventListeners(list);
-  }, 10);
+    this.addEventListeners(list);
+  }, 200);
 }
 
-function popupInit() {
-  sendMessage({
-    popup: 'init',
-  }, function(rule) {
-    if (chrome.runtime.lastError) {
-      logger('error', chrome.runtime.lastError.message);
-    } else {
-      if (rule) {
-        globalCurrentRule = rule;
+
+Popup.prototype.utils = function() {
+  return {
+    logger: (type, log, currentPopupCb) => log && this.popupSendMes({ type, log}, currentPopupCb),
+    matchKey: (target, id) => {
+      for (const key in target) {
+        // 递归匹配
+        if (target[key] && typeof target[key] === "object") {
+          this.utils().matchKey(target[key], id);
+        }
+        // 开关控制
+        if (target[key] == `${id}`) {
+          target.on = !target.on;
+        }
       }
-      render(rule);
     }
-  });
+  }
 }
 
-popupInit();
+const popup = new Popup();
+popup.popupInit();
+
+
 

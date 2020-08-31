@@ -2,6 +2,10 @@
  * content-script - 常驻脚本
  */
 
+import { CRuntime } from './chromeRuntime';
+console.log('CRuntime: ', CRuntime);
+
+
 var locationRule = null;
 
 /**
@@ -30,6 +34,8 @@ ContentScript.prototype.rePing = function() {
     });
   })
 }
+
+
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

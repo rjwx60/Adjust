@@ -1,0 +1,23 @@
+{
+  "name": "adjuster",
+  "version": "1.0.0",
+  "description": "a simple  chrome extension",
+  "main": "no entry",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "watch": "webpack --watch"
+  },
+  "keywords": [
+    "adjuster",
+    "chrome",
+    "extension"
+  ],
+  "author": "rjwx60",
+  "license": "MIT",
+  "dependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.1.2"
+  }
+}

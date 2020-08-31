@@ -1,47 +1,49 @@
 {
-  "manifest_version": 2,
-  "name": "Adjuster",
-  "version": "0.0.1",
-  "description": "__MSG_pluginDesc__",
-  "icons": 
-  {
+	"manifest_version": 2,
+	"name": "Simple Page Adjuster",
+	"version": "0.0.1",
+	"default_locale": "zh_CN",
+	"description": "Simple Page Adjuster",
+	"icons": {
 		"16": "img/icon.png",
 		"48": "img/icon.png",
 		"128": "img/icon.png"
-  },
-  "background": {
+	},
+	"background": {
 		"page": "background.html"
-  },
-  "browser_action": 
-	{
+	},
+	"browser_action": {
 		"default_icon": "img/icon.png",
 		"default_title": "Adjuster",
 		"default_popup": "popup.html"
-  },
-  "content_scripts": 
-	[
+	},
+	"content_scripts": [
 		{
-			"matches": ["<all_urls>"],
-			"js": ["js/content-script.js"],
+			"matches": [
+				"http://*/*",
+				"https://*/*"
+			],
+			"js": [
+				"dist/content-script.js"
+			],
 			"run_at": "document_start"
 		}
-  ],
-  "permissions":
-	[
+	],
+	"permissions": [
 		"activeTab",
-    "notifications", 
-    "webRequest", 
-    "webRequestBlocking", 
+		"notifications",
+		"webRequest",
+		"webRequestBlocking",
 		"storage",
 		"tabs"
 	],
-	"options_page": "options.html",
-	"options_ui":
-	{
-		"page": "options.html",
-		"chrome_style": true
-	},
-	"homepage_url": "https://www.baidu.com",
-	"default_locale": "zh_CN",
+	"web_accessible_resources": [
+		"css/*",
+		"js/*",
+		"dist/*",
+		"img/*"
+	],
+	"homepage_url": "https://www.baidu.com/",
+	"author": "rjwx60<rjwx60@gmail.com>",
 	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

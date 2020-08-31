@@ -249,7 +249,8 @@ var globalRuleCache = null;
 function getStorage(target = "rules") {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get(target, function(items) {
-      resolve(items.rules);
+      // resolve(items.rules);
+      resolve(ruleArrayTest)
     });
   });
 }

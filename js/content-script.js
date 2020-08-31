@@ -1,7 +1,6 @@
 /**
  * content-script - 常驻脚本
  */
-
 import { CRuntime } from './chromeAPI';
 
 function ContentScript() {

@@ -9,7 +9,6 @@ function Popup() {
   this.currentRule = null;
 }
 
-
 Popup.prototype.popupInit = function() {
   const _this = this;
   this.popupSendMes({
@@ -60,22 +59,26 @@ Popup.prototype.addEventListeners = function (parentNode) {
 }
 
 Popup.prototype.refreshRules = function () {
-  // this.utils().logger('info', this.currentRule);
   const bgPage = chrome.extension.getBackgroundPage();
-  // 通知 background 存储后刷新页面
-  bgPage.setNewRule(this.currentRule).then(response => {
-    if (!response.error) {
-      this.utils().logger('refresh', 'refresh current page');
-    } else {
-      this.utils().logger('info', response);
-    }
-  }).finally(() => {
-    // 通知 contentScript 刷新 tab 页
-    this.utils().logger('refresh', 'refresh current page', () => {
-      // 刷新 popup 页面
-      document.location.reload();
-    });
-  })
+  const bgInstance = bgPage.GetBgInstance();
+  // 异步操作需要等待否则获取不到
+  setTimeout(() => {
+    // 通知 background 存储后刷新页面
+    bgInstance && bgInstance.setNewRule(this.currentRule).then(response => {
+      if (!response.error) {
+        this.utils().logger('refresh', 'refresh current page');
+      } else {
+        this.utils().logger('info', response);
+      }
+    }).finally(() => {
+      // 通知 contentScript 刷新 tab 页
+      this.utils().logger('refresh', 'refresh current page', () => {
+        // 刷新 popup 页面
+        document.location.reload();
+      });
+    })
+  }, 500)
+  
 }
 
 Popup.prototype.addRules = function () {
@@ -173,9 +176,8 @@ Popup.prototype.render = function(currentRule) {
 
   setTimeout(() => {
     this.addEventListeners(list);
-  }, 200);
+  }, 1000);
 }
-
 
 Popup.prototype.utils = function() {
   return {

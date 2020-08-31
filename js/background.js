@@ -1,6 +1,10 @@
 /**
  * background - 背景页
  */
+// background 不能使用 import 格式且无法被 webpack 处理
+// 因处理后代码函数无法被 popup 通过 chrome.extension.getBackgroundPage.functionName 获取并通信
+// 但想使用 scss 格式，故在此处引入，随 webpack 处理后再在 html 中引入
+import '../css/background.scss'
 
 const ruleArrayTest = [
   {
@@ -237,31 +241,26 @@ const ruleArrayTest = [
 ];
 
 
-/**
- * 全局变量
- */
-var globalRuleCache = null;
+function Background() {
+  this.currentRule = null;
+}
 
-
-/**
- * untils 工具函数
- */
-function getStorage(target = "rules") {
+Background.prototype.getStorage = function(target = 'rules') {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get(target, function(items) {
-      // resolve(items.rules);
-      resolve(ruleArrayTest)
+      resolve(items.rules ? items.rules : ruleArrayTest);
+      // resolve(ruleArrayTest)
     });
   });
 }
 
-function setStorage(value = null) {
-  console.log('valueeee: ', value);
-
+Background.prototype.setStorage = function (keys = 'rules', value = null) {
   return new Promise((resolve, reject) => {
     if (value) {
       // 存储操作
-      chrome.storage.sync.set({ rules: value }, function() {
+      const obj = {};
+      obj[keys] = value;
+      chrome.storage.sync.set(obj, function() {
         resolve();
       });
     } else {
@@ -270,17 +269,16 @@ function setStorage(value = null) {
   })
 }
 
-function setNewRule(rule) {
-  console.log('ruleeeeee: ', rule);
+Background.prototype.setNewRule = function(rule) {
   // 保存数据
   return new Promise((resolve, reject) => {
     if (rule) {
-      const index = globalRuleCache.findIndex(
+      const index = this.currentRule.findIndex(
         cv => cv.hostname == rule.hostname
       );
       if (index !== -1) {
-        globalRuleCache.splice(index, 1, rule);
-        chrome.storage.sync.set({ rules: globalRuleCache }, function() {
+        this.currentRule.splice(index, 1, rule);
+        chrome.storage.sync.set({ rules: this.currentRule }, function() {
           resolve({
             code: 200,
             error: 0,
@@ -294,11 +292,7 @@ function setNewRule(rule) {
   });
 }
 
-/**
- * @param len 构造长度默认16
- * @param isMix 是否混合，待定保留项
- */
-function randomCode(len = 16, isMix = false) {
+Background.prototype.randomCode = function(len = 16, isMix = false) {
   const cahrs = isMix ? "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" : '123456789'
   const maxPos = cahrs.length;
   let randomString = "";
@@ -308,68 +302,52 @@ function randomCode(len = 16, isMix = false) {
   return randomString;
 }
 
-/**
- * 日志输出
- * @param info 信息标题
- * @param content 信息主体
- * @param type 打印类型 默认为1 log
- */
-function logger(info, content, type = 1) {
-  switch(type) {
-    case 1:
-      console.log(info, content);
-      break;
-    default:
-      break;
+Background.prototype.logger = function (info, content, type = 1) {
+  const logTypeMap = {
+    1: (...args) => { console.log(args) },
+    2: (...args) => { console.error(args) },
+    3: (...args) => { console.dir(args) }
   }
+  logTypeMap[type](info, content);
 }
 
-
-/**
- * 负责监听页面变化 -> 向 popup 返回请求的 targetRule
- */
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  getStorage()
-    .then(targetRule => {
-      return new Promise((resolve, reject) => {
-        const target = 
-          targetRule &&
-          targetRule.filter(cv => {
-            return cv.hostname === request.location.hostname;
-          })[0];
-        target ? resolve(target) : resolve(null);
+// 负责监听页面变化 -> 向 popup 返回请求的 targetRule
+Background.prototype.addListener = function() {
+  const _this = this;
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    _this.getStorage()
+      .then(targetRule => {
+        return new Promise((resolve, reject) => {
+          const target = 
+            targetRule &&
+            targetRule.filter(cv => {
+              return cv.hostname === request.location.hostname;
+            })[0];
+          target ? resolve(target) : resolve(null);
+        });
+      })
+      .then(target => {
+        return new Promise((resolve, reject) => {
+          sendResponse(target);
+        });
+      })
+      .catch(err => {
+        _this.logger('err', err);
       });
-    })
-    .then(target => {
-      return new Promise((resolve, reject) => {
-        sendResponse(target);
-      });
-    })
-    .catch(err => {
-      logger('err', err);
-    });
-  return true;
-});
+    return true;
+  });  
+}
 
-
-
-
-
-
-
-/**
- * background 页
- * 负责 background 渲染展示
- */
-function backgroundInit() {
-  getStorage().then(rulesList => {
-    logger('rulesList: ', rulesList)
-    globalRuleCache = rulesList;
-    rulesListRender(rulesList);
+Background.prototype.init = function() {
+  this.getStorage().then(rulesList => {
+    this.currentRule = rulesList;
+    this.rulesListRender(rulesList);
+    this.logger('rulesList: ', rulesList)
   });
 }
 
-function rulesListRender(rulesList) {
+Background.prototype.rulesListRender = function(rulesList) {
+  const _this = this;
   if (rulesList && rulesList.length) {
     new Vue({
       el: "#app",
@@ -382,7 +360,7 @@ function rulesListRender(rulesList) {
       },
       methods: {
         changeStyle(rule, valueItem) {
-          logger('valueItem: ', valueItem)
+          _this.logger('valueItem: ', valueItem)
           if(valueItem.combine) {
             const resultArr = valueItem.combine.split(":");
             // 格式限制
@@ -430,10 +408,10 @@ function rulesListRender(rulesList) {
             only: true,
             target: "",
             excepetTarget: "",
-            id: randomCode(),
+            id: _this.randomCode(),
             valueArr: [
               {
-                id: randomCode(),
+                id: _this.randomCode(),
                 key: "",
                 value: "",
                 combine: ""
@@ -446,21 +424,20 @@ function rulesListRender(rulesList) {
           // TODO: 展示 + Markdown 更改增加规则按钮位置
           const scriptRule = {
             on: true,
-            id: randomCode(),
+            id: _this.randomCode(),
             valueArr: [{
               type: 'string',
               script: "console.log('script test')"
             }]
           };
           rule.scriptRules.push(scriptRule);
-          console.log('rule: ', rule);
         },
         addRule(){
           this.newRule = {
             hostname: "",
             urlparams: "",
             on: true,
-            id: randomCode(),
+            id: _this.randomCode(),
             scriptRules: [],
             styleRules: [],
             selected: false
@@ -478,7 +455,8 @@ function rulesListRender(rulesList) {
               }
             })
           }
-          setStorage(this.rulesList).then(() => {
+          console.log('this.rulesList: ', this.rulesList);
+          _this.setStorage('rules', this.rulesList).then(() => {
             alert('save success');
           }).catch((err) => {
             alert(err);
@@ -492,5 +470,11 @@ function rulesListRender(rulesList) {
   }
 }
 
+const background = new Background();
+background.addListener();
+background.init();
 
-backgroundInit();
+function GetBgInstance() {
+  return background;
+}
+

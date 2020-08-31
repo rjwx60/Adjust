@@ -1,10 +1,23 @@
 /* 主区域 */
 .container{
+  width: 100vw;
+  height: 100vh;
+  min-width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+}
+.listContainer {
   display:flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 10px 0px;
+  width: 500px;
+  height: 100%;
+  margin: 20px;
 }
 /* 功能按钮 */
 .optBtnList{
@@ -31,7 +44,7 @@
 }
 .ruleTitle > input{
   background: none;
-  border: 1px solid #ccc;
+  border: 1px solid #000;
   border-radius: 6px;
   padding: 8px;
   margin: 0px 6px;
@@ -66,7 +79,7 @@
   line-height: 18px;
   text-align: center;
   padding: 0px;
-  border: 1px solid #ccc;
+  border: 1px solid #000;
   margin: 0 6px;
   outline: none;
   cursor: pointer;
@@ -87,7 +100,7 @@
 }
 .optionsShow > input{
   background: none;
-  border: 1px solid #ccc;
+  border: 1px solid #000;
   border-radius: 6px;
   padding: 8px;
   margin: 6px;
@@ -101,7 +114,7 @@
   line-height: 18px;
   text-align: center;
   padding: 0px;
-  border: 1px solid #ccc;
+  border: 1px solid #000;
   margin: 0 6px;
   outline: none;
   cursor: pointer;
@@ -156,14 +169,17 @@
 }
 
 .switch:checked+label:before {
-  background-color: #8ce196;
+  background-color: #38df4b;
 }
 
 .switch:checked+label:after {
   margin-left: 26px;
 }
 
-
+button {
+  outline: none;
+  border-color: #000;
+}
 
 
 /* JS IDE */

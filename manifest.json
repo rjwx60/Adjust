@@ -5,16 +5,16 @@
 	"default_locale": "zh_CN",
 	"description": "Simple Page Adjuster",
 	"icons": {
-		"16": "img/icon.png",
-		"48": "img/icon.png",
-		"128": "img/icon.png"
+		"16": "img/beer.png",
+		"48": "img/beer.png",
+		"128": "img/beer.png"
 	},
 	"background": {
 		"page": "background.html",
 		"persistent" : true
 	},
 	"browser_action": {
-		"default_icon": "img/icon.png",
+		"default_icon": "img/beer.png",
 		"default_title": "Adjuster",
 		"default_popup": "popup.html"
 	},

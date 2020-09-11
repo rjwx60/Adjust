@@ -2,9 +2,15 @@
 typora-root-url: ../01
 ---
 
+
+
 ## ChromeExtension-Adjust
 
-可根据自己的想法，来更改网页呈现样式，一旦添加则自动应用
+可根据自己的想法，来更改网页呈现样式，一旦添加成功则自动应用，适用于常用但样式布局不宜阅读的页面，比如：
+
+- 电脑微信公众号文章用浏览器打开时的页面(段落间距、文章宽度修改)；
+- 掘金文章页面(代码块宽度，广告栏，导航块样式修改)；
+- .....
 
 
 
@@ -24,17 +30,15 @@ typora-root-url: ../01
 
 ### 问题与解决
 
-- chrome.extension.getBackgroundPage() undefined 或旗下方法获取 undefined；重加载或禁用 import 方式
-- popup 日志输出问题；曲线救国，通过事件通知 content-script 实现输出；
-- background import 形式 Error；配置 webpack 单独处理；
+- chrome.extension.getBackgroundPage 获取 undefined &下属方法获取 error：重加载插件或禁用 import 方式(background页)；
 
-https://developer.chrome.com/extensions/extension
+- popup 日志输出问题：曲线救国，通过事件通知 content-script 实现输出；
 
-https://stackoverflow.com/questions/21146457/chrome-extension-getbackgroundpage-function-example
+- background 内容页 import 形式 Error；在 webpack 配置中单独处理；
 
-https://stackoverflow.com/questions/48104433/how-to-import-es6-modules-in-content-script-for-chrome-extension
+- 代码杂乱、通讯机制不明确，调试困难：使用原型模式、观察者模式、适配器模式等设计理念整合；
 
-https://stackoverflow.com/questions/58480046/cannot-use-import-statement-outside-a-module-when-importing-a-const-from-another?noredirect=1&lq=1
+  
 
 
 

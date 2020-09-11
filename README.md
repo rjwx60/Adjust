@@ -1,10 +1,4 @@
----
-typora-root-url: ../01
----
-
-
-
-## ChromeExtension-Adjust
+# ChromeExtension-Adjust
 
 可根据自己的想法，来更改网页呈现样式，一旦添加成功则自动应用，适用于常用但样式布局不宜阅读的页面，比如：
 
@@ -14,21 +8,27 @@ typora-root-url: ../01
 
 
 
-### 使用方法
+
+
+## 使用方法
 
 将项目文件夹拖拽进 [chrome://extensions/](chrome://extensions/) 中即可
 
 
 
-### 效果展示
 
-<img src="/source/images/popup.png" style="zoom:40%;" align="left"/>
+
+## 效果展示
+
+<img src="https://leibnize-picbed.oss-cn-shenzhen.aliyuncs.com/img/20200911203121.png" style="zoom:40%;" align="left"/>
 
 <img src="/source/images/background.png" style="zoom:30%;" align="left"/>
 
 
 
-### 问题与解决
+
+
+## 问题与解决
 
 - chrome.extension.getBackgroundPage 获取 undefined &下属方法获取 error：重加载插件或禁用 import 方式(background页)；
 
@@ -42,6 +42,6 @@ typora-root-url: ../01
 
 
 
-### 特别感谢
+## 特别感谢s
 
 [小茗同学](https://www.cnblogs.com/liuxianan/p/chrome-plugin-develop.html)

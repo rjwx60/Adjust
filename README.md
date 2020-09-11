@@ -10,9 +10,13 @@
 
 
 
+
+
 ## 使用方法
 
 将项目文件夹拖拽进 [chrome://extensions/](chrome://extensions/) 中即可
+
+
 
 
 
@@ -22,7 +26,9 @@
 
 <img src="https://leibnize-picbed.oss-cn-shenzhen.aliyuncs.com/img/20200911203121.png" style="zoom:40%;" align="left"/>
 
-<img src="/source/images/background.png" style="zoom:30%;" align="left"/>
+<img src="https://leibnize-picbed.oss-cn-shenzhen.aliyuncs.com/img/20200911203412.png" style="zoom:30%;" align="left"/>
+
+
 
 
 
@@ -42,6 +48,8 @@
 
 
 
-## 特别感谢s
+
+
+## 特别感谢
 
 [小茗同学](https://www.cnblogs.com/liuxianan/p/chrome-plugin-develop.html)

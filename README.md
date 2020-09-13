@@ -24,9 +24,9 @@
 
 ## 效果展示
 
-<img src="https://leibnize-picbed.oss-cn-shenzhen.aliyuncs.com/img/20200911203121.png" style="zoom:40%;" align="left"/>
+<img src="https://leibnize-picbed.oss-cn-shenzhen.aliyuncs.com/img/20200911203121.png" style="zoom:40%;"/>
 
-<img src="https://leibnize-picbed.oss-cn-shenzhen.aliyuncs.com/img/20200911203412.png" style="zoom:30%;" align="left"/>
+<img src="https://leibnize-picbed.oss-cn-shenzhen.aliyuncs.com/img/20200911203412.png" style="zoom:30%;"/>
 
 
 
